@@ -7,6 +7,8 @@ def parsing (data_):
     soup_ = soup_.find_all('pre')[1].get_text()
     tmp_ = re.split(r'\n\n', soup_)
     tmp_ = re.split(r'\n', tmp_[1])
+    if len(tmp_) == 23:
+        return result_
     tmp_ = re.split(r' ', tmp_[0])
 
     try:
