@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "name": "test-default",
+    "description": "Маршрут по-умолчанию",
+    "type": "Позитивный",
+    "NAME": "test",
+    "NET": "0.0.0.0",
+    "MASK": "0.0.0.0",
+    "VIA": "192.168.1.2",
+    "DEV": "eth0",
+    "FWMARK": "",
+    "resultNET": "0.0.0.0",
+    "resultMASK": "0.0.0.0",
+    "resultVIA": "192.168.1.2",
+    "resultDEV": "eth0",
+    "resultFWMARK": "NONE"
+  }
+]

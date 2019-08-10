@@ -7,8 +7,9 @@ def parsing (data_):
     soup_ = soup_.find_all('pre')[1].get_text()
     tmp_ = re.split(r'\n\n', soup_)
     tmp_ = re.split(r'\n', tmp_[1])
-    if len(tmp_) == 23:
-        return result_
+    if len(tmp_) != 24:     #если по-умолчанию количество маршрутов отличается от 23-х, то условие надо исправить
+        result_.append({"net_mask": 'NONE', "via": 'NONE', "dev": 'NONE', "fwmark": 'NONE'})
+        return result_, False
     tmp_ = re.split(r' ', tmp_[0])
 
     try:
@@ -30,4 +31,4 @@ def parsing (data_):
 
     result_.append({"net_mask":net_mask, "via":via, "dev":dev, "fwmark":fwmark})
 
-    return result_
+    return result_, True

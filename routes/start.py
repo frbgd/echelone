@@ -102,9 +102,9 @@ req_ = librequests.get(protocol_, host_, port_, urn_, login_, password_, timeout
 
 if type(req_) == requests.models.Response:
     print('Код ответа сервера: ' + str(req_.status_code))
-    route_ = parser_route_config.parsing(req_.text)
+    route_, isInserted = parser_route_config.parsing(req_.text)
 else:
-    route_ = 'error'
+    route_, isInserted = 'error', False
 
 print('Результат парсинга страницы ' + protocol_ + '://' + host_ + ':' + port_ + urn_ + ' :')
 table_data_ = [['Имя', 'Сеть', 'Маска сети', 'Промежуточный адрес', 'Устройство', 'Метка']]
@@ -121,9 +121,9 @@ req_ = librequests.get(protocol_, host_, port_, urn_, login_, password_, timeout
 
 if type(req_) == requests.models.Response:
     print('Код ответа сервера: ' + str(req_.status_code))
-    route_ = parser_netstatus_routes.parsing(req_.text)
+    route_, isInserted = parser_netstatus_routes.parsing(req_.text)
 else:
-    route_ = 'error'
+    route_, isInserted = 'error', False
 
 print('Результат парсинга страницы ' + protocol_ + '://' + host_ + ':' + port_ + urn_ + ' :\n')
 table_data_ = [['Сеть/Маска', 'Промежуточный адрес', 'Устройство', 'Метка']]
@@ -156,6 +156,8 @@ bar_ = progressbar.ProgressBar(maxval=(len(dictionary_) + 1),
 bar_.start()
 number_ = 0
 
+table_data_ = [['Имя', 'Описание', 'Тип', 'Сеть', 'Маска', 'Промежуточный адрес', 'Устройство', 'Метка', 'Код post', 'Фактическая сеть (route_config)', 'Фактическая маска (route_config)', 'Фактический промежуточный адрес (route_config)', 'Фактическое устройство (route_config)', 'Фактическая метка (route_config)', 'Фактическая сеть/маска (netstatus)', 'Фактический промежуточный адрес (netstatus)', 'Фактическое устройство (netstatus)', 'Фактическая метка (netstatus)', 'result']]
+
 for i_ in dictionary_:
     urn_ = str(parameters_['post']['route_add']['urn'])
     data_ = parameters_['post']['route_add']['data'].copy()
@@ -169,3 +171,43 @@ for i_ in dictionary_:
     code_post_ = librequests.post(protocol_, host_, port_, urn_, login_, password_, timeout_, data_)
 
     #парсеры
+    urn_ = str(parameters_['get']['netstatus']['urn'])
+    req_ = librequests.get(protocol_, host_, port_, urn_, login_, password_, timeout_)
+
+    if type(req_) == requests.models.Response:
+        route_netstatus_, isInserted = parser_netstatus_routes.parsing(req_.text)
+    else:
+        route_netstatus_, isInserted = 'error', False
+
+    urn_ = str(parameters_['get']['route_config']['urn'])
+    req_ = librequests.get(protocol_, host_, port_, urn_, login_, password_, timeout_)
+
+    if type(req_) == requests.models.Response:
+        route_route_config_, isInserted = parser_route_config.parsing(req_.text)
+    else:
+        route_route_config_, isInserted = 'error', False
+
+    # Сравнение результатов:
+    if route_route_config_[0]['net'] == i_['resultNET'] and route_route_config_[0]['mask'] == i_['resultMASK'] and route_route_config_[0]['via'] == i_['resultVIA'] and route_route_config_[0]['dev'] == i_['resultDEV'] and route_route_config_[0]['fwmark'] == i_['resultFWMARK']:
+        diff_status_ = '\x1b[1;32;40m' + ' ok ' + '\x1b[0m'
+    else:
+        diff_status_ = '\x1b[1;31;40m' + ' error ' + '\x1b[0m'
+
+    table_data_.append([i_['name'], i_['description'], i_['type'], i_['NET'], i_['MASK'], i_['VIA'], i_['DEV'], i_['FWMARK'], code_post_, route_route_config_[0]['net'], route_route_config_[0]['mask'], route_route_config_[0]['via'], route_route_config_[0]['dev'], route_route_config_[0]['fwmark'], route_netstatus_[0]['net_mask'], route_netstatus_[0]['via'],route_netstatus_[0]['dev'], route_netstatus_[0]['fwmark'], diff_status_])
+
+    #удаление маршрута, если он сохранился
+    if isInserted == True:
+        urn_ = str(parameters_['post']['route_delete']['urn'])
+        data_ = parameters_['post']['route_delete']['data'].copy()
+        req_ = librequests.post(protocol_, host_, port_, urn_, login_, password_, timeout_, data_)
+
+    # Прогресс бар
+    bar_.update(number_ + 1)
+    number_ += 1
+bar_.finish()
+
+print('----------------------------------------------------------')
+print('\x1b[1;32;40m' + ' Шаг-7: Вывод результата: ' + '\x1b[0m')
+print(AsciiTable(table_data_).table)
+
+print('\x1b[1;32;40m' + datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S") + ' скрипт завершен' + '\x1b[0m')
