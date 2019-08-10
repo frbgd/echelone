@@ -126,7 +126,10 @@ else:
     route_ = 'error'
 
 print('Результат парсинга страницы ' + protocol_ + '://' + host_ + ':' + port_ + urn_ + ' :\n')
-print(route_)
+table_data_ = [['Сеть/Маска', 'Промежуточный адрес', 'Устройство', 'Метка']]
+for i_ in route_:
+    table_data_.append([i_['net_mask'], i_['via'], i_['dev'], i_['fwmark']])
+print(AsciiTable(table_data_).table)
 print('')
 
 #удаление тестового маршрута
