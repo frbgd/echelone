@@ -76,19 +76,19 @@ except:
 
 # Тест-кейс проверки
 # проверяем post-запросы
-# print('----------------------------------------------------------')
-# print('\x1b[1;32;40m' + ' Шаг-3: Проверка post-запросов с параметрами по умолчанию: ' + '\x1b[0m')
-#
-# description_ = str(parameters_['post']['route_add']['description'])
-# urn_ = str(parameters_['post']['route_add']['urn'])
-# data_ = parameters_['post']['route_add']['data'].copy()
-#
-# print('Описание: ' + description_)
-# print('URL: ' + protocol_ + '://' + host_ + ':' + port_ + urn_)
-# print('Параметры: ' + str(data_))
-#
-# req_ = librequests.post(protocol_, host_, port_, urn_, login_, password_, timeout_, data_)
-# print('Код ответа сервера: ' + str(req_))
+print('----------------------------------------------------------')
+print('\x1b[1;32;40m' + ' Шаг-3: Проверка post-запросов с параметрами по умолчанию: ' + '\x1b[0m')
+
+description_ = str(parameters_['post']['route_add']['description'])
+urn_ = str(parameters_['post']['route_add']['urn'])
+data_ = parameters_['post']['route_add']['data'].copy()
+
+print('Описание: ' + description_)
+print('URL: ' + protocol_ + '://' + host_ + ':' + port_ + urn_)
+print('Параметры: ' + str(data_))
+
+req_ = librequests.post(protocol_, host_, port_, urn_, login_, password_, timeout_, data_)
+print('Код ответа сервера: ' + str(req_))
 
 print('----------------------------------------------------------')
 print('\x1b[1;32;40m' + ' Шаг-4: Проверка get-запросов и парсеров с параметрами по умолчанию: ' + '\x1b[0m')
