@@ -1,0 +1,43 @@
+{
+  "name": "ip-routes",
+  "description": "Проверка задания сетевых маршрутов в Сеть => Маршруты (/cgi-bin/routeconfig.cgi)",
+  "timeout": 10,
+  "timeout_start": 300,
+  "get": {
+    "route_config": {
+      "name": "Конфигурация маршрутов",
+      "description": "Сеть => Маршруты",
+      "urn": "/cgi-bin/routeconfig.cgi"
+    },
+    "netstatus": {
+      "name": "Состояние сети",
+      "description": "Состояние => Состояние сети",
+      "urn": "/cgi-bin/netstatus.cgi"
+    }
+  },
+  "post": {
+    "route_add": {
+      "name": "Добавление маршрута",
+      "description": "Сеть => Маршруты => Добавить маршрут",
+      "urn": "/cgi-bin/routeconfig.cgi",
+      "data": {
+        "NAME": "test",
+        "NET": "0.0.0.0",
+        "MASK": "0.0.0.0",
+        "VIA": "192.168.1.2",
+        "DEV": "eth0",
+        "FWMARK": "",
+        "ACTION": "Добавить"
+      }
+    },
+    "route_delete": {
+      "name": "Удаление маршрута",
+      "description": "Сеть => Маршруты => Удалить маршрут",
+      "urn": "/cgi-bin/routeconfig.cgi",
+      "data": {
+        "ROUTE_ACTION": "Удалить",
+        "ROUTE_NAME": "test"
+      }
+    }
+  }
+}
