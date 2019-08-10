@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 # Запуск по умолчанию: ./start.py --protocol https --host 192.168.1.1 --port 8443 --login admin --passwd radmin
 
@@ -156,13 +157,14 @@ bar_ = progressbar.ProgressBar(maxval=(len(dictionary_) + 1),
 bar_.start()
 number_ = 0
 
-table_data_ = [['Имя', 'Описание', 'Тип', 'Сеть', 'Маска', 'Промежуточный адрес', 'Устройство', 'Метка', 'Код post', 'Фактическая сеть (route_config)', 'Фактическая маска (route_config)', 'Фактический промежуточный адрес (route_config)', 'Фактическое устройство (route_config)', 'Фактическая метка (route_config)', 'Фактическая сеть/маска (netstatus)', 'Фактический промежуточный адрес (netstatus)', 'Фактическое устройство (netstatus)', 'Фактическая метка (netstatus)', 'result']]
+table_data_ = [['Имя', 'Описание', 'Тип', 'Имя маршрута', 'Сеть', 'Маска', 'Промежуточный адрес', 'Устройство', 'Метка', 'Код post', 'Фактическое имя маршрута (route_config)', 'Фактическая сеть (route_config)', 'Фактическая маска (route_config)', 'Фактический промежуточный адрес (route_config)', 'Фактическое устройство (route_config)', 'Фактическая метка (route_config)', 'Фактическая сеть/маска (netstatus)', 'Фактический промежуточный адрес (netstatus)', 'Фактическое устройство (netstatus)', 'Фактическая метка (netstatus)', 'result']]
 
 for i_ in dictionary_:
     urn_ = str(parameters_['post']['route_add']['urn'])
     data_ = parameters_['post']['route_add']['data'].copy()
 
     # Назначение переменных из словаря
+    data_['NAME'] = i_['NAME']
     data_['NET'] = i_['NET']
     data_['MASK'] = i_['MASK']
     data_['VIA'] = i_['VIA']
@@ -188,17 +190,18 @@ for i_ in dictionary_:
         route_route_config_, isInserted = 'error', False
 
     # Сравнение результатов:
-    if route_route_config_[0]['net'] == i_['resultNET'] and route_route_config_[0]['mask'] == i_['resultMASK'] and route_route_config_[0]['via'] == i_['resultVIA'] and route_route_config_[0]['dev'] == i_['resultDEV'] and route_route_config_[0]['fwmark'] == i_['resultFWMARK']:
+    if route_route_config_[0]['name'] == i_['resultNAME'] and route_route_config_[0]['net'] == i_['resultNET'] and route_route_config_[0]['mask'] == i_['resultMASK'] and route_route_config_[0]['via'] == i_['resultVIA'] and route_route_config_[0]['dev'] == i_['resultDEV'] and route_route_config_[0]['fwmark'] == i_['resultFWMARK'] and code_post_ != 200:
         diff_status_ = '\x1b[1;32;40m' + ' ok ' + '\x1b[0m'
     else:
         diff_status_ = '\x1b[1;31;40m' + ' error ' + '\x1b[0m'
 
-    table_data_.append([i_['name'], i_['description'], i_['type'], i_['NET'], i_['MASK'], i_['VIA'], i_['DEV'], i_['FWMARK'], code_post_, route_route_config_[0]['net'], route_route_config_[0]['mask'], route_route_config_[0]['via'], route_route_config_[0]['dev'], route_route_config_[0]['fwmark'], route_netstatus_[0]['net_mask'], route_netstatus_[0]['via'],route_netstatus_[0]['dev'], route_netstatus_[0]['fwmark'], diff_status_])
+    table_data_.append([i_['name'], i_['description'], i_['type'], i_['NAME'], i_['NET'], i_['MASK'], i_['VIA'], i_['DEV'], i_['FWMARK'], code_post_, route_route_config_[0]['name'], route_route_config_[0]['net'], route_route_config_[0]['mask'], route_route_config_[0]['via'], route_route_config_[0]['dev'], route_route_config_[0]['fwmark'], route_netstatus_[0]['net_mask'], route_netstatus_[0]['via'],route_netstatus_[0]['dev'], route_netstatus_[0]['fwmark'], diff_status_])
 
     #удаление маршрута, если он сохранился
     if isInserted == True:
         urn_ = str(parameters_['post']['route_delete']['urn'])
         data_ = parameters_['post']['route_delete']['data'].copy()
+        data_['ROUTE_NAME'] = i_['NAME']
         req_ = librequests.post(protocol_, host_, port_, urn_, login_, password_, timeout_, data_)
 
     # Прогресс бар
