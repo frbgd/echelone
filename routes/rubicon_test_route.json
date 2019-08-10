@@ -1,0 +1,38 @@
+{
+  "name": "rubicon: Проверка назначения IP-маршрута",
+  "script_path": "/usr/bin/python3.5",
+  "description": "Проверка назначения разных IP-маршрутов Рубикону",
+  "working_directory": "/home/script-server/conf/scripts/rubicon/routes/",
+  "parameters": [
+    {
+      "name": "Файл",
+      "param": "",
+      "default": "/home/script-server/conf/scripts/rubicon/routes/start.py"
+    },
+    {
+      "name": "Протокол",
+      "param": "--protocol",
+      "default": "https"
+    },
+    {
+      "name": "IP Рубикон",
+      "param": "--host",
+      "default": "192.168.1.1"
+    },
+    {
+      "name": "Порт",
+      "param": "--port",
+      "default": "8443"
+    },
+    {
+      "name": "Логин",
+      "param": "--login",
+      "default": "admin"
+    },
+    {
+      "name": "Пароль",
+      "param": "--passwd",
+      "default": "radmin"
+    }
+  ]
+}

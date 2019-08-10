@@ -213,4 +213,9 @@ print('----------------------------------------------------------')
 print('\x1b[1;32;40m' + ' Шаг-7: Вывод результата: ' + '\x1b[0m')
 print(AsciiTable(table_data_).table)
 
+outputfile = "output.log"
+with open(outputfile, "w") as file:
+    file.write(AsciiTable(table_data_).table)
+
+print('Файл ' + outputfile + ' записан')
 print('\x1b[1;32;40m' + datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S") + ' скрипт завершен' + '\x1b[0m')
